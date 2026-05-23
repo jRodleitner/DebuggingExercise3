@@ -46,20 +46,28 @@ public class DeltaDebugger {
             // (preserves line numbers)
             candidate.set(i, "");
 
-            // Write temporary test file
-            Path tempFile =
-                    Files.createTempFile("ddmin", ".tex");
-
+            Path tempFile = Files.createTempFile("ddmin", ".tex");
             Files.write(tempFile, candidate);
 
-            // Compile candidate
-            Error error =
-                    tester.compileAndExtractError(
-                            tempFile.toString()
-                    );
+            Error error = null;
+            try {
+                error = tester.compileAndExtractError(tempFile.toString());
+            } finally {
+                // 1. Delete the actual .tex file from the AppData/temp folder
+                Files.deleteIfExists(tempFile);
 
-            // Delete temporary file
-            Files.delete(tempFile);
+                // 2. Extract ONLY the file name (e.g., "ddmin12345.tex")
+                String fileName = tempFile.getFileName().toString();
+                // 3. Strip the extension (e.g., "ddmin12345")
+                String baseName = fileName.substring(0, fileName.lastIndexOf('.'));
+
+                // 4. Delete the aux files from the Java project folder (current working directory)
+                Files.deleteIfExists(Paths.get(baseName + ".log"));
+                Files.deleteIfExists(Paths.get(baseName + ".aux"));
+                Files.deleteIfExists(Paths.get(baseName + ".pdf"));
+                Files.deleteIfExists(Paths.get(baseName + ".out"));
+            }
+            System.out.println(error);
 
             // Check whether same error still occurs
             if (targetError.equals(error)) {

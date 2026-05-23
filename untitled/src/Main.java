@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        String inputFile = "C:\\Users\\jonar\\Dev\\GitHub\\DebuggingExercise3\\untitled\\src\\texfiles\\broken_2.tex";
+        String inputFile = "C:\\Users\\jonar\\Dev\\GitHub\\DebuggingExercise3\\untitled\\src\\texfiles\\broken_10.tex";
 
         List<String> lines = SimpleParser.readLines(inputFile);
 
@@ -19,6 +19,7 @@ public class Main {
 
         Error originalError =
                 tester.compileAndExtractError(inputFile);
+
 
         if (originalError == null) {
             System.out.println("No LaTeX error found.");

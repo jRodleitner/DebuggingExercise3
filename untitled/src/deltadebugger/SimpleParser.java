@@ -17,8 +17,8 @@ public class SimpleParser {
             String line = lines.get(i).trim();
 
             if (line.startsWith("\\documentclass")
-                    || line.startsWith("\\begin{document}")
-                    || line.startsWith("\\end{document}")
+                    || line.startsWith("\\begin{")
+                    || line.startsWith("\\end{")
                     || line.startsWith("\\usepackage")) {
 
                 protectedLines.add(i + 1);
