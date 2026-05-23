@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        String inputFile = "C:\\Users\\jonar\\Dev\\GitHub\\DebuggingExercise3\\untitled\\src\\texfiles\\broken.tex";
+        String inputFile = "C:\\Users\\jonar\\Dev\\GitHub\\DebuggingExercise3\\untitled\\src\\texfiles\\broken_2.tex";
 
         List<String> lines = SimpleParser.readLines(inputFile);
 

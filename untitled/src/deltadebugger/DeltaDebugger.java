@@ -26,7 +26,7 @@ public class DeltaDebugger {
         for (int i = 0; i < current.size(); i++) {
 
             // Never remove protected structural lines
-            System.out.println("Current i = " + i + " content: " + current.get(i));
+            System.out.println("Current line = " + (i + 1) + " content: " + current.get(i));
             if (protectedLines.contains(i + 1)) {
                 continue;
             }
