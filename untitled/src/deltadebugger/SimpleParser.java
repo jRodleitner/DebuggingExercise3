@@ -21,7 +21,7 @@ public class SimpleParser {
                     || line.startsWith("\\end{document}")
                     || line.startsWith("\\usepackage")) {
 
-                protectedLines.add(i);
+                protectedLines.add(i + 1);
             }
         }
 

@@ -12,7 +12,7 @@ public class DeltaDebugger {
         this.tester = tester;
     }
 
-    public List<String> minimize(
+    public List<String> reduce(
             List<String> originalLines,
             Set<Integer> protectedLines,
             Error targetError
@@ -26,7 +26,8 @@ public class DeltaDebugger {
         for (int i = 0; i < current.size(); i++) {
 
             // Never remove protected structural lines
-            if (protectedLines.contains(i)) {
+            System.out.println("Current i = " + i + " content: " + current.get(i));
+            if (protectedLines.contains(i + 1)) {
                 continue;
             }
 
@@ -35,7 +36,7 @@ public class DeltaDebugger {
                 continue;
             }
 
-            System.out.println("Trying to remove line " + (i + 1));
+            System.out.println("Trying to remove line " + (i +1) + current.get(i));
 
             // Create candidate version
             List<String> candidate =
@@ -65,7 +66,7 @@ public class DeltaDebugger {
 
                 System.out.println(
                         "Successfully removed line "
-                                + (i + 1)
+                                + (i + 1) + current.get(i)
                 );
 
                 // Keep reduction
@@ -75,7 +76,7 @@ public class DeltaDebugger {
 
                 System.out.println(
                         "Could not remove line "
-                                + (i + 1)
+                                + (i + 1) + current.get(i)
                 );
             }
         }

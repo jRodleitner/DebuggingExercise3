@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        String inputFile = "C:\\Users\\jonar\\Dev\\GitHub\\DebuggingExercise3\\untitled\\src\\texfiles\\broken_2.tex";
+        String inputFile = "C:\\Users\\jonar\\Dev\\GitHub\\DebuggingExercise3\\untitled\\src\\texfiles\\broken.tex";
 
         List<String> lines = SimpleParser.readLines(inputFile);
 
@@ -32,7 +32,7 @@ public class Main {
                 new DeltaDebugger(tester);
 
         List<String> minimized =
-                debugger.minimize(
+                debugger.reduce(
                         lines,
                         protectedLines,
                         originalError
