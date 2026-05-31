@@ -13,6 +13,7 @@ public class Error {
         return errorMessage;
     }
 
+    //equals for comparing error messages
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Error)) {

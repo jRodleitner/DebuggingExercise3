@@ -16,6 +16,8 @@ public class SimpleParser {
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i).trim();
 
+            //Extract all lines that, are absolutely necessary for LaTex
+            // e.g. They will, when removed, definitely change the error
             if (line.startsWith("\\documentclass")
                     || line.startsWith("\\begin{")
                     || line.startsWith("\\end{")

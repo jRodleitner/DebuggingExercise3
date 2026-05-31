@@ -12,61 +12,75 @@ import java.util.stream.Stream;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-
+        System.out.println("**********************************************************");
+        System.out.println("*********Welcome to Line by Line Delta-Debugger***********");
+        System.out.println("**********************************************************");
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the TeX filename (e.g., broken_1.tex): ");
-        String filename = scanner.nextLine().trim();
 
-        String inputFile = "src/texfiles/" + filename;
+        while (true) {
+            System.out.print("Enter the TeX filename (e.g., broken_1.tex) or type 'q' to exit: ");
+            String filename = scanner.nextLine().trim();
 
-        List<String> lines = SimpleParser.readLines(inputFile);
+            if (filename.equals("q")) {
+                System.out.println("Thank you for using Line By Line Delta Debugger");
+                break;
+            }
 
-        Set<Integer> protectedLines = SimpleParser.getProtectedLines(lines);
-        System.out.println("Protected Lines: " + protectedLines);
-        Execute tester = new Execute();
+            String inputFile = "src/texfiles/" + filename;
 
-        Error originalError =
-                tester.compileAndExtractError(inputFile);
+            try {
+                List<String> lines = SimpleParser.readLines(inputFile);
 
+                Set<Integer> protectedLines = SimpleParser.getProtectedLines(lines);
 
-        if (originalError == null) {
-            System.out.println("No LaTeX error found.");
-            return;
+                Execute tester = new Execute();
+
+                Error originalError =
+                        tester.compileAndExtractError(inputFile);
+
+                if (originalError == null) {
+                    System.out.println("No LaTeX error found.");
+                    deleteTempFiles();
+                    System.out.println("----------------------------------------------------------");
+                    continue;
+                }
+
+                DeltaDebugger debugger =
+                        new DeltaDebugger(tester);
+
+                List<String> minimized =
+                        debugger.reduce(
+                                lines,
+                                protectedLines,
+                                originalError
+                        );
+
+                //generate file that corresponds to the given input file
+                Path output = Paths.get("src/minimized/minimized_" + filename);
+
+                Files.write(output, minimized);
+
+                System.out.print("Minimized file written to: ");
+                System.out.println(output);
+
+            } catch (Exception e) {
+                System.err.println("An error occurred while processing " + filename + ": " + e.getMessage());
+            } finally {
+                deleteTempFiles();
+                System.out.println("----------------------------------------------------------");
+            }
         }
 
-        System.out.println("Original error:");
-        System.out.println(originalError);
-
-        DeltaDebugger debugger =
-                new DeltaDebugger(tester);
-
-        List<String> minimized =
-                debugger.reduce(
-                        lines,
-                        protectedLines,
-                        originalError
-                );
-        System.out.println("Test: " + minimized);
-        Path output = Paths.get("src/minimized/minimized_" + filename);
         scanner.close();
-
-        Files.write(output, minimized);
-
-        System.out.println("Minimized file written to:");
-        System.out.println(output);
-
-        deleteTempFiles();
     }
 
-    public static void deleteTempFiles() {
-        // Defines the path to the current project root directory
+
+    //Clean up all the .aux .log .pdf files that are generated during debugging
+    private static void deleteTempFiles() {
         Path projectRoot = Paths.get(".");
 
-        System.out.println("Cleaning up temporary LaTeX files...");
-
-        // Open a stream to read the files in the project root directory
         try (Stream<Path> files = Files.list(projectRoot)) {
-            files.filter(Files::isRegularFile) // Ensure we only look at files, not folders
+            files.filter(Files::isRegularFile)
                     .filter(path -> {
                         String filename = path.getFileName().toString().toLowerCase();
                         return filename.endsWith(".aux") ||
@@ -76,7 +90,6 @@ public class Main {
                     .forEach(path -> {
                         try {
                             Files.delete(path);
-                            System.out.println("Deleted: " + path.getFileName());
                         } catch (IOException e) {
                             System.err.println("Failed to delete " + path.getFileName() + ": " + e.getMessage());
                         }

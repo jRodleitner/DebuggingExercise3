@@ -8,6 +8,7 @@ import java.util.regex.*;
 
 public class Execute {
 
+    //execute pdflatex and extract the error
     public Error compileAndExtractError(String texFilePath)
             throws IOException, InterruptedException {
 
